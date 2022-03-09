@@ -1,6 +1,6 @@
 package com.terehov.soap.service;
 
-import com.terehov.soap.model.ServiceTeamEntity;
+import com.terehov.soap.model.GroupsEntity;
 import com.terehov.soap.model.StudentsEntity;
 
 import javax.jws.WebMethod;
@@ -8,11 +8,14 @@ import java.util.List;
 
 public interface IDataProvider {
 
+    /**
+     * работа со студентами
+     */
     @WebMethod
     public StudentsEntity insertUser(StudentsEntity entity);
 
     @WebMethod
-    String getUserById(Integer id);
+    StudentsEntity getUserById(int id);
 
     @WebMethod
     List<StudentsEntity> getListUsersByListOfId(List<Integer> listOfId);
@@ -25,4 +28,21 @@ public interface IDataProvider {
 
     @WebMethod
     boolean deleteUser(int id);
+
+    /**
+     * работа с группами
+     */
+    @WebMethod
+    public GroupsEntity insertGroup(GroupsEntity entity);
+
+    @WebMethod
+    boolean deleteGroup(int id);
+
+    @WebMethod
+    boolean updateGroup(GroupsEntity entity);
+
+    /**
+     * для сервис-отправителя
+     */
+    public Object getInfoAboutLectorTeamStudent(int id);
 }

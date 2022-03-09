@@ -17,8 +17,6 @@
             <basic name="urlTg">
                 <column name="url_tg" nullable="false"/>
             </basic>
-            <one-to-many name="groupsById" mapped-by="lecturersByLecturerId"
-                         target-entity="com.terehov.soap.model.GroupsEntity"/>
         </attributes>
     </entity>
 </entity-mappings>

@@ -22,10 +22,6 @@ public class GroupsEntity {
     @ManyToOne
     @JoinColumn(name = "lecturer_id", referencedColumnName = "id")
     private LecturersEntity lecturersByLecturerId;
-    @OneToMany(mappedBy = "groupsByGroupId")
-    private Collection<StudentsEntity> studentsById;
-    @OneToMany(mappedBy = "groupsByGroupId")
-    private Collection<TeamsEntity> teamsById;
 
     public GroupsEntity() {
     }
@@ -34,9 +30,14 @@ public class GroupsEntity {
         this.id = id;
     }
 
-    public GroupsEntity(String specializations, Integer number) {
+    public GroupsEntity(int id, String specializations,
+                        Integer number, Integer lecturerId,
+                        LecturersEntity lecturersByLecturerId) {
+        this.id = id;
         this.specializations = specializations;
         this.number = number;
+        this.lecturerId = lecturerId;
+        this.lecturersByLecturerId = lecturersByLecturerId;
     }
 
     public int getId() {
@@ -79,22 +80,6 @@ public class GroupsEntity {
         this.lecturersByLecturerId = lecturersByLecturerId;
     }
 
-    public Collection<StudentsEntity> getStudentsById() {
-        return studentsById;
-    }
-
-    public void setStudentsById(Collection<StudentsEntity> studentsById) {
-        this.studentsById = studentsById;
-    }
-
-    public Collection<TeamsEntity> getTeamsById() {
-        return teamsById;
-    }
-
-    public void setTeamsById(Collection<TeamsEntity> teamsById) {
-        this.teamsById = teamsById;
-    }
-
     @Override
     public String toString() {
         return "GroupsEntity{" +
@@ -103,8 +88,6 @@ public class GroupsEntity {
                 ", number=" + number +
                 ", lecturerId=" + lecturerId +
                 ", lecturersByLecturerId=" + lecturersByLecturerId +
-                ", studentsById=" + studentsById +
-                ", teamsById=" + teamsById +
                 '}';
     }
 }

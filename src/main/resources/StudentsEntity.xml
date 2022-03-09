@@ -23,14 +23,6 @@
             <basic name="teamId">
                 <column name="team_id" nullable="false" precision="-1"/>
             </basic>
-            <many-to-one name="groupsByGroupId" optional="true" target-entity="com.terehov.soap.model.GroupsEntity">
-                <join-column name="group_id" nullable="false" referenced-column-name="id"/>
-            </many-to-one>
-            <many-to-one name="teamsByTeamId" optional="true" target-entity="com.terehov.soap.model.TeamsEntity">
-                <join-column name="team_id" nullable="false" referenced-column-name="id"/>
-            </many-to-one>
-            <one-to-many name="teamsById" mapped-by="studentsByTeamLeaderId"
-                         target-entity="com.terehov.soap.model.TeamsEntity"/>
         </attributes>
     </entity>
 </entity-mappings>

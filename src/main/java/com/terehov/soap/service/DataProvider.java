@@ -1,6 +1,6 @@
 package com.terehov.soap.service;
 
-import com.terehov.soap.model.StudentsEntity;
+import com.terehov.soap.model.*;
 import com.terehov.soap.util.HibernateUtil;
 import com.terehov.soap.Constants;
 
@@ -23,6 +23,9 @@ public class DataProvider implements IDataProvider {
 
     private static final Logger logger = LogManager.getLogger(IDataProvider.class);
 
+    /**
+     * методы для работы со студентами в группах
+     */
     @Override
     @WebMethod
     public StudentsEntity insertUser(StudentsEntity entity) {
@@ -44,7 +47,7 @@ public class DataProvider implements IDataProvider {
 
     @Override
     @WebMethod
-    public String getUserById(Integer id) {
+    public StudentsEntity getUserById(int id) {
         Transaction transaction = null;
         StudentsEntity users;
         try (Session session = getSession()) {
@@ -53,11 +56,7 @@ public class DataProvider implements IDataProvider {
             transaction.commit();
             logger.info(StudentsEntity.class.getSimpleName() + Constants.FOUND);
 
-            return (users.getName() + " "
-                    + users.getLastName() + " "
-                    + "telegramm url=" + users.getUrlTg() + " "
-                    + "group ID=" + users.getGroupId() + " "
-                    + "ID=" + users.getId());
+            return users;
 
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
@@ -149,6 +148,89 @@ public class DataProvider implements IDataProvider {
             return false;
         }
     }
+
+
+    /**
+     * методы для работы с группами
+     */
+    @Override
+    public GroupsEntity insertGroup(GroupsEntity entity) {
+        Transaction transaction = null;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            entity = (GroupsEntity) session.merge(entity);
+            transaction.commit();
+            logger.info(entity.getClass().getSimpleName() + Constants.ADDED);
+            return entity;
+        } catch (Exception e) {
+            logger.info(e.getClass() + e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteGroup(int id) {
+        Transaction transaction = null;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            session.delete(new GroupsEntity(id));
+            transaction.commit();
+            logger.info(GroupsEntity.class.getSimpleName() + id + Constants.DELETED);
+            return true;
+        } catch (Exception e) {
+            logger.error(e.getClass() + e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateGroup(GroupsEntity entity) {
+        Transaction transaction = null;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            session.update(entity);
+            transaction.commit();
+            logger.info(entity.getClass().getSimpleName() + Constants.UPDATED);
+            return true;
+        } catch (Exception e) {
+            logger.error(e.getClass() + e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return false;
+        }
+    }
+
+    /**
+     * метод для сервис-отправителя
+     */
+    @Override
+    public Object getInfoAboutLectorTeamStudent(int id) {
+        Transaction transaction = null;
+        StudentsEntity users;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            users = session.get(StudentsEntity.class, id);
+            transaction.commit();
+            logger.info(StudentsEntity.class.getSimpleName() + Constants.FOUND);
+
+            return users;
+
+        } catch (Exception e) {
+            logger.info(e.getClass() + e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return null;
+        }
+    }
+
 
     Session getSession() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

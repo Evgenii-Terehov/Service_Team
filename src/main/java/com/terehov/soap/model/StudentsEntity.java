@@ -1,7 +1,6 @@
 package com.terehov.soap.model;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Table(name = "students", schema = "public", catalog = "soap_service_team_db")
@@ -25,14 +24,6 @@ public class StudentsEntity {
     @Basic
     @Column(name = "team_id", nullable = true)
     private Integer teamId;
-    @ManyToOne
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    private GroupsEntity groupsByGroupId;
-    @ManyToOne
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
-    private TeamsEntity teamsByTeamId;
-    @OneToMany(mappedBy = "studentsByTeamLeaderId")
-    private Collection<TeamsEntity> teamsById;
 
     public StudentsEntity() {
     }
@@ -41,10 +32,14 @@ public class StudentsEntity {
         this.id = id;
     }
 
-    public StudentsEntity(String name, String lastName, String urlTg) {
+    public StudentsEntity(String name, String lastName,
+                          String urlTg, Integer groupId,
+                          Integer teamId) {
         this.name = name;
         this.lastName = lastName;
         this.urlTg = urlTg;
+        this.groupId = groupId;
+        this.teamId = teamId;
     }
 
     public int getId() {
@@ -95,36 +90,15 @@ public class StudentsEntity {
         this.teamId = teamId;
     }
 
-    public GroupsEntity getGroupsByGroupId() {
-        return groupsByGroupId;
-    }
-
-    public void setGroupsByGroupId(GroupsEntity groupsByGroupId) {
-        this.groupsByGroupId = groupsByGroupId;
-    }
-
-    public TeamsEntity getTeamsByTeamId() {
-        return teamsByTeamId;
-    }
-
-    public void setTeamsByTeamId(TeamsEntity teamsByTeamId) {
-        this.teamsByTeamId = teamsByTeamId;
-    }
-
-    public Collection<TeamsEntity> getTeamsById() {
-        return teamsById;
-    }
-
-    public void setTeamsById(Collection<TeamsEntity> teamsById) {
-        this.teamsById = teamsById;
-    }
-
     @Override
     public String toString() {
         return "StudentsEntity{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", urlTg='" + urlTg + '\'' +
+                ", groupId=" + groupId +
+                ", teamId=" + teamId +
                 '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.terehov.soap.model;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Table(name = "lecturers", schema = "public", catalog = "soap_service_team_db")
@@ -19,8 +18,6 @@ public class LecturersEntity {
     @Basic
     @Column(name = "url_tg", nullable = true, length = -1)
     private String urlTg;
-    @OneToMany(mappedBy = "lecturersByLecturerId")
-    private Collection<GroupsEntity> groupsById;
 
     public LecturersEntity() {
     }
@@ -67,14 +64,6 @@ public class LecturersEntity {
         this.urlTg = urlTg;
     }
 
-    public Collection<GroupsEntity> getGroupsById() {
-        return groupsById;
-    }
-
-    public void setGroupsById(Collection<GroupsEntity> groupsById) {
-        this.groupsById = groupsById;
-    }
-
     @Override
     public String toString() {
         return "LecturersEntity{" +
@@ -82,7 +71,6 @@ public class LecturersEntity {
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", urlTg='" + urlTg + '\'' +
-                ", groupsById=" + groupsById +
                 '}';
     }
 }

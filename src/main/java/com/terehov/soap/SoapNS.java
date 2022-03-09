@@ -4,7 +4,6 @@ import com.terehov.soap.model.StudentsEntity;
 import com.terehov.soap.service.IDataProvider;
 import com.terehov.soap.service.DataProvider;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SoapNS {
@@ -30,19 +29,19 @@ public class SoapNS {
         /**
          *вывод списка пользователей по списку id
          */
-        List<Integer> listOfId = new ArrayList<>();
-        listOfId.add(1);
-        listOfId.add(2);
-        listOfId.add(4);
-        List<StudentsEntity> list = dataProvider.getListUsersByListOfId(listOfId);
-        for(StudentsEntity list1 : list){
-            System.out.println(list1);
-        }
+//        List<Integer> listOfId = new ArrayList<>();
+//        listOfId.add(1);
+//        listOfId.add(2);
+//        listOfId.add(4);
+//        List<StudentsEntity> list = dataProvider.getListUsersByListOfId(listOfId);
+//        for(StudentsEntity list1 : list){
+//            System.out.println(list1);
+//        }
 
         /**
          *вывод пользователя по id
          */
-//        String str = dataProvider.getUserById(1);
-//        System.out.println(str);
+        StudentsEntity str = dataProvider.getUserById(1);
+        System.out.println(str.toString());
     }
 }
