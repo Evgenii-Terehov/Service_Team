@@ -11,6 +11,8 @@ public class SoapNS {
     public static void main(String[] args) {
         IDataProvider dataProvider = new DataProvider();
 
+        System.out.println(dataProvider.getInfoAboutLectorTeamStudent(1));
+
         /**
          *добавление пользователя
          */
@@ -41,7 +43,7 @@ public class SoapNS {
         /**
          *вывод пользователя по id
          */
-        StudentsEntity str = dataProvider.getUserById(1);
-        System.out.println(str.toString());
+//        StudentsEntity str = dataProvider.getUserById(1);
+//        System.out.println(str.toString());
     }
 }

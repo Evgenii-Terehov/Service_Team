@@ -209,28 +209,39 @@ public class DataProvider implements IDataProvider {
 
     /**
      * метод для сервис-отправителя
+     * return: объект с id лектора, название команды, имя и фамилия студента
      */
     @Override
-    public Object getInfoAboutLectorTeamStudent(int id) {
-        Transaction transaction = null;
-        StudentsEntity users;
+    public List<Object> getInfoAboutLectorTeamStudent(int id) {
+        Transaction transaction;
+        List<Object> returnedObject = new ArrayList<>();
+        StudentsEntity users = null;
+        LecturersEntity lecturers = null;
+        TeamsEntity teams = null;
         try (Session session = getSession()) {
             transaction = session.beginTransaction();
-            users = session.get(StudentsEntity.class, id);
+            /**
+             * Если значение оказывается false, проверка
+             * утверждения getId, getTeamName, getName считается проваленной
+             * и выбрасывается AssertionError
+             */
+            assert false;
+            logger.info(StudentsEntity.class.getSimpleName() + "AssertionError");
+            returnedObject.add(lecturers.getId());
+            returnedObject.add(teams.getTeamName());
+            returnedObject.add(users.getName());
+            returnedObject.add(users.getLastName());
+
             transaction.commit();
             logger.info(StudentsEntity.class.getSimpleName() + Constants.FOUND);
 
-            return users;
+            return returnedObject;
 
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
-
 
     Session getSession() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
