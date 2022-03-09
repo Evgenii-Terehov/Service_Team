@@ -1,10 +1,12 @@
 package com.terehov.soap.service;
 
+import com.terehov.soap.model.StudentsEntity;
 import com.terehov.soap.util.HibernateUtil;
 import com.terehov.soap.Constants;
-import com.terehov.soap.model.ServiceTeamEntity;
 
+// для соединения по soap класса и его методов
 import javax.jws.WebMethod;
+import javax.jws.WebService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,17 +18,18 @@ import org.hibernate.SessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+@WebService(endpointInterface = "com/terehov/soap/service/IDataProvider")
 public class DataProvider implements IDataProvider {
 
     private static final Logger logger = LogManager.getLogger(IDataProvider.class);
 
     @Override
     @WebMethod
-    public ServiceTeamEntity insertUser(ServiceTeamEntity entity) {
+    public StudentsEntity insertUser(StudentsEntity entity) {
         Transaction transaction = null;
-        try (Session session = getSession()){
+        try (Session session = getSession()) {
             transaction = session.beginTransaction();
-            entity = (ServiceTeamEntity) session.merge(entity);
+            entity = (StudentsEntity) session.merge(entity);
             transaction.commit();
             logger.info(entity.getClass().getSimpleName() + Constants.ADDED);
             return entity;
@@ -43,18 +46,18 @@ public class DataProvider implements IDataProvider {
     @WebMethod
     public String getUserById(Integer id) {
         Transaction transaction = null;
-        ServiceTeamEntity users;
+        StudentsEntity users;
         try (Session session = getSession()) {
             transaction = session.beginTransaction();
-            users = session.get(ServiceTeamEntity.class, id);
+            users = session.get(StudentsEntity.class, id);
             transaction.commit();
-            logger.info(ServiceTeamEntity.class.getSimpleName() + Constants.FOUND);
+            logger.info(StudentsEntity.class.getSimpleName() + Constants.FOUND);
 
-            return (users.getFirstname() + " "
-                    + users.getLastname() + " "
-                    + users.getGroupname() + " "
-                    + users.getRole() + " "
-                    + users.getPhonenumber());
+            return (users.getName() + " "
+                    + users.getLastName() + " "
+                    + "telegramm url=" + users.getUrlTg() + " "
+                    + "group ID=" + users.getGroupId() + " "
+                    + "ID=" + users.getId());
 
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
@@ -66,32 +69,60 @@ public class DataProvider implements IDataProvider {
     }
 
     @Override
-    public List<ServiceTeamEntity> selectAllUsers() {
-        Transaction transaction;
-        List<ServiceTeamEntity> list = new ArrayList<>();
-        try (Session session = getSession()){
+    public List<StudentsEntity> getListUsersByListOfId(List<Integer> listOfId) {
+        Transaction transaction = null;
+        StudentsEntity users;
+        List<StudentsEntity> list = new ArrayList<>();
+        try (Session session = getSession()) {
             transaction = session.beginTransaction();
-            list = session.createQuery("from ServiceTeamEntity ", ServiceTeamEntity.class).list();
+
+            for(Integer id : listOfId) {
+                users = session.get(StudentsEntity.class, id);
+                list.add(users);
+            }
+
+            transaction.commit();
+            logger.info(StudentsEntity.class.getSimpleName() + Constants.FOUND);
+
+            return list;
+
+        } catch (Exception e) {
+            logger.info(e.getClass() + e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return null;
+        }
+    }
+
+    @WebMethod
+    @Override
+    public List<StudentsEntity> selectAllUsers() {
+        Transaction transaction;
+        List<StudentsEntity> list = new ArrayList<>();
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            list = session.createQuery("from StudentsEntity ", StudentsEntity.class).list();
             transaction.commit();
             logger.info("Records were selected");
             return list;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
             return list;
         }
     }
 
+    @WebMethod
     @Override
-    public boolean updateUser(ServiceTeamEntity entity) {
+    public boolean updateUser(StudentsEntity entity) {
         Transaction transaction = null;
-        try (Session session = getSession()){
+        try (Session session = getSession()) {
             transaction = session.beginTransaction();
             session.update(entity);
             transaction.commit();
-            logger.info(entity.getClass().getSimpleName() + " updated");
+            logger.info(entity.getClass().getSimpleName() + Constants.UPDATED);
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
             if (transaction != null) {
                 transaction.rollback();
@@ -100,16 +131,17 @@ public class DataProvider implements IDataProvider {
         }
     }
 
+    @WebMethod
     @Override
     public boolean deleteUser(int id) {
         Transaction transaction = null;
         try (Session session = getSession()) {
             transaction = session.beginTransaction();
-            session.delete(new ServiceTeamEntity(id));
+            session.delete(new StudentsEntity(id));
             transaction.commit();
-            logger.info(ServiceTeamEntity.class.getSimpleName() + id + " deleted");
+            logger.info(StudentsEntity.class.getSimpleName() + id + Constants.DELETED);
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
             if (transaction != null) {
                 transaction.rollback();

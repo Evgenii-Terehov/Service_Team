@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 version="3.0">
+
+    <entity class="com.terehov.soap.model.LecturersEntity">
+        <table name="lecturers" schema="public" catalog="soap_service_team_db"/>
+        <attributes>
+            <id name="id">
+                <column name="id" precision="-1"/>
+            </id>
+            <basic name="name">
+                <column name="name" nullable="false"/>
+            </basic>
+            <basic name="lastName">
+                <column name="last_name" nullable="false"/>
+            </basic>
+            <basic name="urlTg">
+                <column name="url_tg" nullable="false"/>
+            </basic>
+            <one-to-many name="groupsById" mapped-by="lecturersByLecturerId"
+                         target-entity="com.terehov.soap.model.GroupsEntity"/>
+        </attributes>
+    </entity>
+</entity-mappings>

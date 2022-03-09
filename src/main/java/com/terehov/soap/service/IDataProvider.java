@@ -1,6 +1,7 @@
 package com.terehov.soap.service;
 
 import com.terehov.soap.model.ServiceTeamEntity;
+import com.terehov.soap.model.StudentsEntity;
 
 import javax.jws.WebMethod;
 import java.util.List;
@@ -8,16 +9,19 @@ import java.util.List;
 public interface IDataProvider {
 
     @WebMethod
-    public ServiceTeamEntity insertUser(ServiceTeamEntity entity);
+    public StudentsEntity insertUser(StudentsEntity entity);
 
     @WebMethod
     String getUserById(Integer id);
 
     @WebMethod
-    List<ServiceTeamEntity> selectAllUsers();
+    List<StudentsEntity> getListUsersByListOfId(List<Integer> listOfId);
 
     @WebMethod
-    boolean updateUser(ServiceTeamEntity entity);
+    List<StudentsEntity> selectAllUsers();
+
+    @WebMethod
+    boolean updateUser(StudentsEntity entity);
 
     @WebMethod
     boolean deleteUser(int id);

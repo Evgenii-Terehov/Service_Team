@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 version="3.0">
+
+    <entity class="com.terehov.soap.model.TeamsEntity">
+        <table name="teams" schema="public" catalog="soap_service_team_db"/>
+        <attributes>
+            <id name="id">
+                <column name="id" precision="-1"/>
+            </id>
+            <basic name="teamName">
+                <column name="team_name" nullable="false"/>
+            </basic>
+            <basic name="groupId">
+                <column name="group_id" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="teamLeaderId">
+                <column name="team_leader_id" nullable="false" precision="-1"/>
+            </basic>
+            <many-to-one name="groupsByGroupId" optional="true" target-entity="com.terehov.soap.model.GroupsEntity">
+                <join-column name="group_id" nullable="false" referenced-column-name="id"/>
+            </many-to-one>
+            <many-to-one name="studentsByTeamLeaderId" optional="true"
+                         target-entity="com.terehov.soap.model.StudentsEntity">
+                <join-column name="team_leader_id" nullable="false" referenced-column-name="id"/>
+            </many-to-one>
+            <one-to-many name="studentsById" mapped-by="teamsByTeamId"
+                         target-entity="com.terehov.soap.model.StudentsEntity"/>
+        </attributes>
+    </entity>
+</entity-mappings>
