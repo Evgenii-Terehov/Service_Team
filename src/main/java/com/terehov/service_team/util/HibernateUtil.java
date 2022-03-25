@@ -1,7 +1,7 @@
-package com.terehov.soap.util;
+package com.terehov.service_team.util;
 
-import com.terehov.soap.Constants;
-import com.terehov.soap.model.*;
+import com.terehov.service_team.constant.Constants;
+import com.terehov.service_team.model.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,10 +27,13 @@ public class HibernateUtil {
 
         MetadataSources metadataSources = new MetadataSources(serviceRegistry);
 
-        metadataSources.addAnnotatedClass(StudentsEntity.class);
-        metadataSources.addAnnotatedClass(GroupsEntity.class);
-        metadataSources.addAnnotatedClass(LecturersEntity.class);
-        metadataSources.addAnnotatedClass(TeamsEntity.class);
+        metadataSources.addAnnotatedClass(ClassEntity.class);
+        metadataSources.addAnnotatedClass(GroupEntity.class);
+        metadataSources.addAnnotatedClass(GroupInClassEntity.class);
+        metadataSources.addAnnotatedClass(TaskEntity.class);
+        metadataSources.addAnnotatedClass(UserEntity.class);
+        metadataSources.addAnnotatedClass(UsersInGroupEntity.class);
+        metadataSources.addAnnotatedClass(UsersInClassEntity.class);
 
         SessionFactory sessionFactory = metadataSources.buildMetadata().buildSessionFactory();
         logger.info("end getSessionFactory()");
