@@ -1,0 +1,51 @@
+package com.terehov.service_team.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "user", schema = "public", catalog = "postgres")
+public class UserEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "id")
+    private int id;
+    @Basic
+    @Column(name = "first_name")
+    private String firstName;
+    @Basic
+    @Column(name = "last_name")
+    private String lastName;
+    @Basic
+    @Column(name = "id_telegram")
+    private Long idTelegram;
+
+    @OneToMany(mappedBy = "idUserEntity")
+    private List<UsersInClassEntity> usersInClassEntitiesFK;
+
+    @OneToMany(mappedBy = "idUserEntity")
+    private List<UsersInGroupEntity> usersInGroupEntitiesFK;
+
+    @OneToMany(mappedBy = "idUserEntity")
+    private List<TaskEntity> taskEntitiesFK;
+
+    public UserEntity(int id) {
+        this.id = id;
+    }
+
+    public UserEntity(int id, String firstName, String lastName, Long idTelegram) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.idTelegram = idTelegram;
+    }
+}
