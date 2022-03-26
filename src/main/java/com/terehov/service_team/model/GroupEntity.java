@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "group", schema = "public", catalog = "postgres")
+@Table(name = "group", schema = "public", catalog = "service_team")
 public class GroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -37,4 +36,45 @@ public class GroupEntity {
         this.color = color;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public List<UsersInGroupEntity> getIdGroupEntity() {
+        return idGroupEntity;
+    }
+
+    public void setIdGroupEntity(List<UsersInGroupEntity> idGroupEntity) {
+        this.idGroupEntity = idGroupEntity;
+    }
+
+    public List<GroupInClassEntity> getGroupInClassEntitiesFK() {
+        return groupInClassEntitiesFK;
+    }
+
+    public void setGroupInClassEntitiesFK(List<GroupInClassEntity> groupInClassEntitiesFK) {
+        this.groupInClassEntitiesFK = groupInClassEntitiesFK;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupEntity{" +
+                "id=" + id +
+                ", color='" + color + '\'' +
+                ", idGroupEntity=" + idGroupEntity +
+                ", groupInClassEntitiesFK=" + groupInClassEntitiesFK +
+                '}';
+    }
 }

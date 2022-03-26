@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "users_in_group", schema = "public", catalog = "postgres")
+@Table(name = "users_in_group", schema = "public", catalog = "service_team")
 public class UsersInGroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -39,5 +38,47 @@ public class UsersInGroupEntity {
 
     public UsersInGroupEntity(Integer idUserEntity) {
         this.idUserEntity = new UserEntity(idUserEntity);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public GroupEntity getIdGroupEntity() {
+        return idGroupEntity;
+    }
+
+    public void setIdGroupEntity(GroupEntity idGroupEntity) {
+        this.idGroupEntity = idGroupEntity;
+    }
+
+    public UserEntity getIdUserEntity() {
+        return idUserEntity;
+    }
+
+    public void setIdUserEntity(UserEntity idUserEntity) {
+        this.idUserEntity = idUserEntity;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UsersInGroupEntity{" +
+                "id=" + id +
+                ", idGroupEntity=" + idGroupEntity +
+                ", idUserEntity=" + idUserEntity +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

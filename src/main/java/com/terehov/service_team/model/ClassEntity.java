@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "class", schema = "public", catalog = "postgres")
+@Table(name = "class", schema = "public", catalog = "service_team")
 public class ClassEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -34,5 +33,56 @@ public class ClassEntity {
 
     public ClassEntity(int id) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public List<UsersInClassEntity> getUsersInClassEntitiesFK() {
+        return usersInClassEntitiesFK;
+    }
+
+    public void setUsersInClassEntitiesFK(List<UsersInClassEntity> usersInClassEntitiesFK) {
+        this.usersInClassEntitiesFK = usersInClassEntitiesFK;
+    }
+
+    public List<GroupInClassEntity> getGroupInClassEntitiesFK() {
+        return groupInClassEntitiesFK;
+    }
+
+    public void setGroupInClassEntitiesFK(List<GroupInClassEntity> groupInClassEntitiesFK) {
+        this.groupInClassEntitiesFK = groupInClassEntitiesFK;
+    }
+
+    public List<TaskEntity> getTaskEntitiesFK() {
+        return taskEntitiesFK;
+    }
+
+    public void setTaskEntitiesFK(List<TaskEntity> taskEntitiesFK) {
+        this.taskEntitiesFK = taskEntitiesFK;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassEntity{" +
+                "id=" + id +
+                ", className='" + className + '\'' +
+                ", usersInClassEntitiesFK=" + usersInClassEntitiesFK +
+                ", groupInClassEntitiesFK=" + groupInClassEntitiesFK +
+                ", taskEntitiesFK=" + taskEntitiesFK +
+                '}';
     }
 }

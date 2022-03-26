@@ -20,14 +20,12 @@ public class SoapTeam {
 //            LOGGER.info("Creating WEB server and publishing SOAP endpoint");
 //            Endpoint.publish(URL, new TeamServiceImpl());
             TeamServiceImpl teamService = new TeamServiceImpl();
-//            System.out.println((teamService.getLectorGroup(teamService.getUserClass(1).getIdClassEntity().getId())).getIdUserEntity().getFirstName());
+            System.out.println((teamService.getLectorGroup(teamService.getUserClass(1).getIdClassEntity().getId())).getIdUserEntity().getFirstName());
 
-
-//    for(UserEntity i: teamService.selectAllUsers()){
+            System.out.println(teamService.getUserById(3).getLastName());
+//    for(Object i: teamService.selectAllUsers().toArray()){
 //        System.out.println(i);
 //    }
-
-
     }
 
 //    public static void main(String[] args) {

@@ -4,10 +4,15 @@ import com.terehov.service_team.model.GroupEntity;
 import com.terehov.service_team.model.UserEntity;
 import com.terehov.service_team.model.UsersInClassEntity;
 import com.terehov.service_team.model.UsersInGroupEntity;
+
 import com.terehov.service_team.service.TeamService;
 import com.terehov.service_team.service.TeamServiceImpl;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -18,6 +23,11 @@ public class Controller {
     @PostMapping("/groups/new")
     public Boolean createGroup(String color) {
         return teamService.createGroup(color);
+    }
+
+    @PostMapping("/groups/{id}/change_color")
+    public Boolean changeGroupColor(@PathVariable("id") Integer idGroup, String color) {
+        return teamService.changeGroupColor(idGroup, color);
     }
 
     @GetMapping("/users/{id}")
@@ -31,18 +41,19 @@ public class Controller {
     }
 
     @GetMapping("/groups/change-color/{id}")
-    public Boolean changeColorForGroup(@PathVariable("id") Integer idGroup, String color) {
-        return teamService.changeGroupColor(idGroup, color);
+    public void changeColorForGroup(@PathVariable("id") Integer idGroup, String color) {
+        teamService.getGroupById(idGroup).setColor(color);
     }
 
     @PostMapping("/groups/add_user/{id_group}")
     public Boolean addUserToGroup(@PathVariable("id_group") Integer idGroup, Integer idUser, String role) {
+         teamService.getGroupById(idGroup);
     return teamService.addUserToGroup(idGroup, idUser, role);
     }
 
-    @GetMapping("/groups/choice_user_role/{id_user}")
-    public Boolean choiceRoleUserToGroup(@PathVariable("id_user") Integer idUser, String role) {
-        return teamService.choiceRoleUserToGroup(idUser, role);
+    @GetMapping("/groups/choice_user_role/{id}")
+    public Boolean choiceRoleUserToGroup(@PathVariable("id") Integer idGroup, Integer idUser, String role) {
+        return teamService.choiceRoleUserToGroup(idGroup, idUser, role);
     }
 
     @PostMapping("/groups/remove_user/{id_user}")
@@ -51,14 +62,14 @@ public class Controller {
     }
 
     @PostMapping("/users/insert_user")
-    public UserEntity insertUser(UserEntity entity) {
+    public Boolean insertUser(UserEntity entity) {
         return teamService.insertUser(entity);
     }
 
-//    @GetMapping("/groups/get_user_from_group")
-//    public UsersInGroupEntity getUserGroup(Integer idUser) {
-//        return teamService.getUserFromGroup(idUser);
-//    }
+    @GetMapping("/groups/get_user_from_group")
+    public UsersInGroupEntity getUserFromGroup(Integer idUser) {
+        return teamService.getUserFromGroup(idUser);
+    }
 
     @GetMapping("/groups/team_leader")
     public UsersInGroupEntity getTeamLeaderGroup(Integer idGroup) {
@@ -90,9 +101,9 @@ public class Controller {
         return teamService.selectAllUsers();
     }
 
-    @PutMapping("/users/update")
+    @PostMapping("/users/update")
     public boolean updateUser(UserEntity entity) {
-        return teamService.updateUser(entity);
+        return teamService.insertUser((entity));
     }
 
     @PostMapping("/users/delete")
@@ -101,12 +112,12 @@ public class Controller {
     }
 
     @PostMapping("/groups/insert")
-    public GroupEntity insertGroup(GroupEntity entity) {
+    public Boolean insertGroup(GroupEntity entity) {
         return teamService.insertGroup(entity);
     }
 
     @PutMapping("/groups/update")
     public boolean updateGroup(GroupEntity entity) {
-        return teamService.updateGroup(entity);
+        return teamService.insertGroup(entity);
     }
 }

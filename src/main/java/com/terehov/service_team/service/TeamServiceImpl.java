@@ -1,418 +1,231 @@
 package com.terehov.service_team.service;
 
 import com.terehov.service_team.constant.Constants;
-import com.terehov.service_team.model.*;
 
-import com.terehov.service_team.util.HibernateUtil;
+import com.terehov.service_team.model.GroupEntity;
+import com.terehov.service_team.model.UserEntity;
+import com.terehov.service_team.model.UsersInClassEntity;
+import com.terehov.service_team.model.UsersInGroupEntity;
+
+import com.terehov.service_team.repository.GroupRepository;
+import com.terehov.service_team.repository.UserRepository;
+import com.terehov.service_team.repository.UsersInClassRepository;
+import com.terehov.service_team.repository.UsersInGroupRepository;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-//@WebService(endpointInterface = "com.terehov.service_team.service.TeamService")
 @Service
 public class TeamServiceImpl implements TeamService {
+
+    UserRepository userRepository;
+    GroupRepository groupRepository;
+    UsersInGroupRepository usersInGroupRepository;
+    UsersInClassRepository usersInClassRepository;
 
     private static final Logger logger = LogManager.getLogger(TeamService.class);
 
     @Override
     public Boolean createGroup(String color) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            session.merge(new GroupEntity(color));
-            transaction.commit();
-            logger.info(color.getClass().getSimpleName() + Constants.ADDED);
-            return true;
+        try {
+        groupRepository.save(new GroupEntity(color));
+        logger.info(color.getClass().getSimpleName() + Constants.ADDED);
+        return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
     }
 
     @Override
     public Boolean deleteGroup(Integer idGroup) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query1 = session.createQuery("DELETE UsersInGroupEntity where idGroupEntity =: idGroup");
-            query1.setParameter("idGroup", new GroupEntity(idGroup));
-            query1.executeUpdate();
-            transaction.commit();
+        try{
+            groupRepository.deleteById(idGroup);
+            return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("DELETE GroupEntity where id =: idGroup");
-            query.setParameter("idGroup", idGroup);
-            query.executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            return false;
-        }
-        return true;
     }
 
     @Override
     public Boolean changeGroupColor(Integer idGroup, String color) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("UPDATE GroupEntity set color =: color where id =: idGroup");
-            query.setParameter("color", color);
-            query.executeUpdate();
-            transaction.commit();
+        try {
+            groupRepository.getById(idGroup).setColor(color);
             return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
     }
 
     @Override
     public Boolean addUserToGroup(Integer idGroup, Integer idUser, String role) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            session.merge(new UsersInGroupEntity(idGroup, idUser, role));
-            transaction.commit();
+        try {
+            usersInGroupRepository.save(new UsersInGroupEntity(idGroup, idUser, role));
             return true;
-        } catch (Exception e) {
+        }catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
     }
 
     @Override
-    public Boolean choiceRoleUserToGroup(Integer idUser, String role) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("UPDATE UsersInGroupEntity set role =: role where idUserEntity =: idUser");
-            query.setParameter("idUser", new UserEntity(idUser));
-            query.setParameter("role", role);
-            query.executeUpdate();
-            transaction.commit();
+    public Boolean choiceRoleUserToGroup(Integer idGroup, Integer idUser, String role) {
+        try {
+            usersInGroupRepository.save(new UsersInGroupEntity(idGroup, idUser, role));
             return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
     }
 
     @Override
     public Boolean removeUserFromGroup(Integer idUser) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("DELETE UsersInGroupEntity where idUserEntity =: idUser");
-            query.setParameter("idUser", new UserEntity(idUser));
-            query.executeUpdate();
-            transaction.commit();
+        try {
+            usersInGroupRepository.deleteById(idUser);
             return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
     }
 
     @Override
-    public UserEntity insertUser(UserEntity entity) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            entity = (UserEntity) session.merge(entity);
-            transaction.commit();
-            logger.info(entity.getClass().getSimpleName() + Constants.ADDED);
-            return entity;
+    public Boolean insertUser(UserEntity entity) {
+        try {
+            userRepository.save(entity);
+            return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            return null;
+            return false;
         }
     }
 
     @Override
     public UserEntity getUserById(Integer id) {
-        Transaction transaction = null;
-        UserEntity users;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            users = session.get(UserEntity.class, id);
-            transaction.commit();
-            logger.info(UserEntity.class.getSimpleName() + Constants.FOUND);
-
-            return users;
-
+        try {
+            return userRepository.getById(id);
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
 
-//    @Override
-//    public UsersInGroupEntity getUserFromGroup(Integer idUser) {
-//        Transaction transaction = null;
-//        UsersInGroupEntity usersInGroupEntity;
-//        try (Session session = getSession()) {
-//            transaction = session.beginTransaction();
-//            Query query = session.createQuery("FROM UsersInGroupEntity where idUserEntity =: idUser");
-//            usersInGroupEntity = (UsersInGroupEntity) query.setParameter(idUser, new UserEntity(idUser)).list().get(0);
-//            transaction.commit();
-//            logger.info(UserEntity.class.getSimpleName() + Constants.FOUND);
-//
-//            return usersInGroupEntity;
-//
-//        } catch (Exception e) {
-//            logger.info(e.getClass() + e.getMessage());
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            return null;
-//        }
-//    }
+    @Override
+    public UsersInGroupEntity getUserFromGroup(Integer idUser) {
+        try {
+            return usersInGroupRepository.getById(idUser);
+        } catch (Exception e) {
+            logger.info(e.getClass() + e.getMessage());
+            return null;
+        }
+    }
 
     @Override
     public UsersInGroupEntity getTeamLeaderGroup(Integer idGroup) {
-        Transaction transaction = null;
-        UsersInGroupEntity usersInGroupEntity;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("FROM UsersInGroupEntity where idGroupEntity =: idGroup and role = 'ADMIN'");
-            usersInGroupEntity = (UsersInGroupEntity) query.setParameter("idGroup", new GroupEntity(idGroup)).list().get(0);
-            transaction.commit();
-            logger.info(UserEntity.class.getSimpleName() + Constants.FOUND);
-
-            return usersInGroupEntity;
-
+        List<UsersInGroupEntity> list = new ArrayList<>();
+        UsersInGroupEntity teamLeader = new UsersInGroupEntity();
+        try {
+            for (UsersInGroupEntity user : list) {
+                if (Objects.equals(usersInGroupRepository.getById(idGroup).getRole(), "Team leader")) {
+                    teamLeader = usersInGroupRepository.getById(user.getId());
+                }
+            }
+            return teamLeader;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
 
     @Override
     public UsersInClassEntity getUserClass(Integer idUser) {
-        Transaction transaction = null;
-        UsersInClassEntity usersInClassEntity;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("FROM UsersInClassEntity where idUserEntity =: idUser");
-            usersInClassEntity = (UsersInClassEntity) query.setParameter("idUser", new UserEntity(idUser)).list().get(0);
-            transaction.commit();
-            logger.info(UserEntity.class.getSimpleName() + Constants.FOUND);
-
-            return usersInClassEntity;
-
+        try{
+            return usersInClassRepository.getById(idUser);
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
 
     @Override
     public UsersInClassEntity getLectorGroup(Integer idClass) {
-        Transaction transaction = null;
-        UsersInClassEntity usersInClassEntity;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("FROM UsersInClassEntity where idClassEntity =: idClass and role = 'lector'");
-            usersInClassEntity = (UsersInClassEntity) query.setParameter("idClass", new ClassEntity(idClass)).list().get(0);
-            transaction.commit();
-            logger.info(UserEntity.class.getSimpleName() + Constants.FOUND);
-
-            return usersInClassEntity;
-
+        List<UsersInClassEntity> list = new ArrayList<>();
+        UsersInClassEntity teamLeader = new UsersInClassEntity();
+        try {
+            for (UsersInClassEntity user : list) {
+                if (Objects.equals(usersInClassRepository.getById(idClass).getRole(), "Lector")) {
+                    teamLeader = usersInClassRepository.getById(user.getId());
+                }
+            }
+            return teamLeader;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
 
     @Override
     public GroupEntity getGroupById(Integer idGroup) {
-        Transaction transaction = null;
-        GroupEntity group;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            group = session.get(GroupEntity.class, idGroup);
-            transaction.commit();
-            logger.info(GroupEntity.class.getSimpleName() + Constants.FOUND);
-
-            return group;
-
+        try {
+            return groupRepository.getById(idGroup);
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
 
     @Override
     public List<UserEntity> getListUsersByListOfId(List<Integer> listOfId) {
-        Transaction transaction = null;
-        UserEntity users;
         List<UserEntity> list = new ArrayList<>();
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-
-            for (Integer id : listOfId) {
-                users = session.get(UserEntity.class, id);
-                list.add(users);
+        try {
+            for (int id : listOfId) {
+                list.add(userRepository.getById(id));
             }
-
-            transaction.commit();
-            logger.info(UserEntity.class.getSimpleName() + Constants.FOUND);
-
             return list;
-
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return null;
         }
     }
 
     @Override
     public List<UserEntity> selectAllUsers() {
-        Transaction transaction;
-        List<UserEntity> list = new ArrayList<>();
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            list = session.createQuery("select UserEntity from UserEntity ", UserEntity.class).list();
-            transaction.commit();
-            logger.info("Records were selected");
-            return list;
+        try {
+            return userRepository.findAll();
         } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
-            return list;
-        }
-    }
-
-    @Override
-    public boolean updateUser(UserEntity entity) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            session.update(entity);
-            transaction.commit();
-            logger.info(entity.getClass().getSimpleName() + Constants.UPDATED);
-            return true;
-        } catch (Exception e) {
-            logger.error(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            return false;
+            return null;
         }
     }
 
     @Override
     public boolean deleteUser(int id) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            session.delete(new UserEntity(id));
-            transaction.commit();
-            logger.info(UserEntity.class.getSimpleName() + id + Constants.DELETED);
+        try {
+            userRepository.deleteById(id);
             return true;
         } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
     }
 
     @Override
-    public GroupEntity insertGroup(GroupEntity entity) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            entity = (GroupEntity) session.merge(entity);
-            transaction.commit();
-            logger.info(entity.getClass().getSimpleName() + Constants.ADDED);
-            return entity;
+    public Boolean insertGroup(GroupEntity entity) {
+        try {
+            groupRepository.save(entity);
+            return true;
         } catch (Exception e) {
             logger.info(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            return null;
-        }
-    }
-
-
-    @Override
-    public boolean updateGroup(GroupEntity entity) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            session.update(entity);
-            transaction.commit();
-            logger.info(entity.getClass().getSimpleName() + Constants.UPDATED);
-            return true;
-        } catch (Exception e) {
-            logger.error(e.getClass() + e.getMessage());
-            if (transaction != null) {
-                transaction.rollback();
-            }
             return false;
         }
-    }
-
-    Session getSession() {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        return sessionFactory.openSession();
     }
 }

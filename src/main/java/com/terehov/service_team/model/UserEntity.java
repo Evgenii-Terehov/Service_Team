@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "user", schema = "public", catalog = "postgres")
+@Table(name = "user", schema = "public", catalog = "service_team")
 public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -47,5 +46,74 @@ public class UserEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.idTelegram = idTelegram;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Long getIdTelegram() {
+        return idTelegram;
+    }
+
+    public void setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
+    }
+
+    public List<UsersInClassEntity> getUsersInClassEntitiesFK() {
+        return usersInClassEntitiesFK;
+    }
+
+    public void setUsersInClassEntitiesFK(List<UsersInClassEntity> usersInClassEntitiesFK) {
+        this.usersInClassEntitiesFK = usersInClassEntitiesFK;
+    }
+
+    public List<UsersInGroupEntity> getUsersInGroupEntitiesFK() {
+        return usersInGroupEntitiesFK;
+    }
+
+    public void setUsersInGroupEntitiesFK(List<UsersInGroupEntity> usersInGroupEntitiesFK) {
+        this.usersInGroupEntitiesFK = usersInGroupEntitiesFK;
+    }
+
+    public List<TaskEntity> getTaskEntitiesFK() {
+        return taskEntitiesFK;
+    }
+
+    public void setTaskEntitiesFK(List<TaskEntity> taskEntitiesFK) {
+        this.taskEntitiesFK = taskEntitiesFK;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", idTelegram=" + idTelegram +
+                ", usersInClassEntitiesFK=" + usersInClassEntitiesFK +
+                ", usersInGroupEntitiesFK=" + usersInGroupEntitiesFK +
+                ", taskEntitiesFK=" + taskEntitiesFK +
+                '}';
     }
 }
