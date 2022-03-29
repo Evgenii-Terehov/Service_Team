@@ -1,32 +1,23 @@
 package com.terehov.service_team;
 
 import com.terehov.service_team.model.UserEntity;
-import com.terehov.service_team.service.TeamService;
+import com.terehov.service_team.repository.UserRepository;
 import com.terehov.service_team.service.TeamServiceImpl;
 
-import javax.xml.ws.Endpoint;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.logging.Logger;
 
-public class SoapTeam {
-
-        private static final Logger LOGGER = Logger.getGlobal();
-
-        private static final String URL = "http://localhost:8080/";
-
-        public static void main(String[] args) {
-
-//            LOGGER.info("Creating WEB server and publishing SOAP endpoint");
-//            Endpoint.publish(URL, new TeamServiceImpl());
-            TeamServiceImpl teamService = new TeamServiceImpl();
-            System.out.println((teamService.getLectorGroup(teamService.getUserClass(1).getIdClassEntity().getId())).getIdUserEntity().getFirstName());
-
-            System.out.println(teamService.getUserById(3).getLastName());
+//public class SoapTeam {
+//        public static void main(String[] args) {
+//
+//
+//            TeamServiceImpl teamService = new TeamServiceImpl();
+////            System.out.println((teamService.getLectorGroup(teamService.getUserClass(1).getIdClassEntity().getId())).getIdUserEntity().getFirstName());
+//
+//            String response = String.valueOf(teamService.getUserById(3));
+//            System.out.println(response);
 //    for(Object i: teamService.selectAllUsers().toArray()){
 //        System.out.println(i);
 //    }
-    }
+//    }
 
 //    public static void main(String[] args) {
 //        try{
@@ -46,4 +37,4 @@ public class SoapTeam {
 //            System.out.println(ex);
 //        }
 //    }
-}
+//}

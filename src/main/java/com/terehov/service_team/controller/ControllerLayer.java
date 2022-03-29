@@ -5,20 +5,28 @@ import com.terehov.service_team.model.UserEntity;
 import com.terehov.service_team.model.UsersInClassEntity;
 import com.terehov.service_team.model.UsersInGroupEntity;
 
-import com.terehov.service_team.service.TeamService;
 import com.terehov.service_team.service.TeamServiceImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@RestController
-public class Controller {
-    private static final TeamService teamService = new TeamServiceImpl();
+@Controller
+public class ControllerLayer {
+
+    private final TeamServiceImpl teamService;
+
+    @Autowired
+    public ControllerLayer(TeamServiceImpl teamService) {
+        this.teamService = teamService;
+    }
 
     @PostMapping("/groups/new")
     public Boolean createGroup(String color) {

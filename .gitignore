@@ -33,3 +33,4 @@ build/
 .vscode/
 
 target/
+com/terehov/service_team/SoapTeam.java
