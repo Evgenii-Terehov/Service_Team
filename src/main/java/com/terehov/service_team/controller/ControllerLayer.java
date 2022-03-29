@@ -28,19 +28,19 @@ public class ControllerLayer {
         this.teamService = teamService;
     }
 
-    @PostMapping("/groups/new")
-    public Boolean createGroup(String color) {
+    @PostMapping("/groups/new/{color}")
+    public Boolean createGroupByColor(@PathVariable("color") String color) {
         return teamService.createGroup(color);
     }
 
-    @PostMapping("/groups/{id}/change_color")
-    public Boolean changeGroupColor(@PathVariable("id") Integer idGroup, String color) {
-        return teamService.changeGroupColor(idGroup, color);
+    @PostMapping("/groups/insert")
+    public Boolean insertGroupByEntity(GroupEntity entity) {
+        return teamService.insertGroup(entity);
     }
 
-    @GetMapping("/users/{id}")
-    public UserEntity getUserById(@PathVariable("id") Integer id) {
-        return teamService.getUserById(id);
+    @PutMapping("/groups/update")
+    public boolean updateGroup(GroupEntity entity) {
+        return teamService.insertGroup(entity);
     }
 
     @PostMapping("/groups/delete/{id}")
@@ -48,19 +48,29 @@ public class ControllerLayer {
         return teamService.deleteGroup(idGroup);
     }
 
-    @GetMapping("/groups/change-color/{id}")
-    public void changeColorForGroup(@PathVariable("id") Integer idGroup, String color) {
-        teamService.getGroupById(idGroup).setColor(color);
+    @GetMapping("/group/{group_id}")
+    public GroupEntity getGroupById(@PathVariable("group_id") Integer id) {
+        return teamService.getGroupById(id);
     }
+
+    @PostMapping("/groups/{id}/change_color")
+    public Boolean changeGroupColor(@PathVariable("id") Integer idGroup, String color) {
+        return teamService.changeGroupColor(idGroup, color);
+    }
+//    либо этот вариант
+//    @GetMapping("/groups/change-color/{id}")
+//    public void changeColorForGroup(@PathVariable("id") Integer idGroup, String color) {
+//        teamService.getGroupById(idGroup).setColor(color);
+//    }
 
     @PostMapping("/groups/add_user/{id_group}")
     public Boolean addUserToGroup(@PathVariable("id_group") Integer idGroup, Integer idUser, String role) {
-         teamService.getGroupById(idGroup);
-    return teamService.addUserToGroup(idGroup, idUser, role);
+        teamService.getGroupById(idGroup);
+        return teamService.addUserToGroup(idGroup, idUser, role);
     }
 
     @GetMapping("/groups/choice_user_role/{id}")
-    public Boolean choiceRoleUserToGroup(@PathVariable("id") Integer idGroup, Integer idUser, String role) {
+    public Boolean choiceRoleUserInGroup(@PathVariable("id") Integer idGroup, Integer idUser, String role) {
         return teamService.choiceRoleUserToGroup(idGroup, idUser, role);
     }
 
@@ -69,19 +79,29 @@ public class ControllerLayer {
         return teamService.removeUserFromGroup(idUser);
     }
 
-    @PostMapping("/users/insert_user")
-    public Boolean insertUser(UserEntity entity) {
-        return teamService.insertUser(entity);
-    }
-
-    @GetMapping("/groups/get_user_from_group")
-    public UsersInGroupEntity getUserFromGroup(Integer idUser) {
+    @GetMapping("/groups/get_user/{id}")
+    public UsersInGroupEntity getUserFromGroup(@PathVariable("id") Integer idUser) {
         return teamService.getUserFromGroup(idUser);
     }
 
     @GetMapping("/groups/team_leader")
-    public UsersInGroupEntity getTeamLeaderGroup(Integer idGroup) {
+    public UsersInGroupEntity getTeamLeaderOfGroup(Integer idGroup) {
         return teamService.getTeamLeaderGroup(idGroup);
+    }
+
+    @GetMapping("/group/group_lector/{id_class}")
+    public UsersInClassEntity getLectorOfGroup(@PathVariable("id_class") Integer idClass) {
+        return teamService.getLectorGroup(idClass);
+    }
+
+    @GetMapping("/users/{id}")
+    public UserEntity getUserById(@PathVariable("id") Integer id) {
+        return teamService.getUserById(id);
+    }
+
+    @PostMapping("/users/insert_user")
+    public Boolean insertUser(UserEntity entity) {
+        return teamService.insertUser(entity);
     }
 
     @GetMapping("/class/user_in_class/{id_user}")
@@ -89,43 +109,23 @@ public class ControllerLayer {
         return teamService.getUserClass(idUser);
     }
 
-    @GetMapping("/group/group_lector/{id_class}")
-    public UsersInClassEntity getLectorGroup(@PathVariable("id_class") Integer idClass) {
-        return teamService.getLectorGroup(idClass);
-    }
-
-    @GetMapping("/group/{group_id}")
-    public GroupEntity getGroupById(@PathVariable("group_id") Integer id) {
-        return teamService.getGroupById(id);
-    }
-
     @GetMapping("/users/list_users_by_id")
-    public List<UserEntity> getListUsersByListOfId(List<Integer> listOfId) {
+    public List<UserEntity> getListOfUsersByIdList(List<Integer> listOfId) {
         return teamService.getListUsersByListOfId(listOfId);
     }
 
     @GetMapping("/users")
-    public List<UserEntity> selectAllUsers() {
+    public List<UserEntity> getAllUsers() {
         return teamService.selectAllUsers();
     }
 
     @PostMapping("/users/update")
-    public boolean updateUser(UserEntity entity) {
+    public boolean updateUserByEntity(UserEntity entity) {
         return teamService.insertUser((entity));
     }
 
-    @PostMapping("/users/delete")
-    public boolean deleteUser(int id) {
+    @PostMapping("/users/delete/{id}")
+    public boolean deleteUser(@PathVariable("id") Integer id) {
         return teamService.deleteUser(id);
-    }
-
-    @PostMapping("/groups/insert")
-    public Boolean insertGroup(GroupEntity entity) {
-        return teamService.insertGroup(entity);
-    }
-
-    @PutMapping("/groups/update")
-    public boolean updateGroup(GroupEntity entity) {
-        return teamService.insertGroup(entity);
     }
 }

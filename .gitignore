@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/java/com/terehov/service_team/SoapTeam.java
+/src/main/java/com/terehov/service_team/SoapTeam.java
