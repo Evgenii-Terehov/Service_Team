@@ -2,12 +2,10 @@ package com.terehov.service_team.service;
 
 import com.terehov.service_team.model.*;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
 import java.util.List;
 
 
-public interface TeamService{
+public interface ITeamService {
 
 //Методы работы с группой
 
@@ -21,15 +19,17 @@ public interface TeamService{
 
     List<UserEntity> getListUsersByListOfId(List<Integer> listOfId);
 
+    List<UserEntity> getListUsersInGroup(Integer idGroup);
+
     UserEntity getUserById(Integer id);
 
     UsersInGroupEntity getUserFromGroup(Integer idUser);
 
-    UsersInGroupEntity getTeamLeaderGroup(Integer idGroup);
+    UserEntity getTeamLeaderGroup(Integer idGroup);
 
     UsersInClassEntity getUserClass(Integer idUser);
 
-    UsersInClassEntity getLectorGroup(Integer idClass);
+    UserEntity getLectorGroup(Integer idClass);
 
     Boolean insertUser(UserEntity entity);
 

@@ -1,16 +1,11 @@
 package com.terehov.service_team.service;
 
-import com.terehov.service_team.constant.Constants;
-
 import com.terehov.service_team.model.GroupEntity;
 import com.terehov.service_team.model.UserEntity;
 import com.terehov.service_team.model.UsersInClassEntity;
 import com.terehov.service_team.model.UsersInGroupEntity;
 
-import com.terehov.service_team.repository.GroupRepository;
-import com.terehov.service_team.repository.UserRepository;
-import com.terehov.service_team.repository.UsersInClassRepository;
-import com.terehov.service_team.repository.UsersInGroupRepository;
+import com.terehov.service_team.repository.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,39 +15,41 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service //чтобы указать что класс - компонент спринга
-public class TeamServiceImpl implements TeamService {
+public class TeamServiceImpl implements ITeamService {
 
     //переменные для инициализации репозиториев
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final UsersInGroupRepository usersInGroupRepository;
     private final UsersInClassRepository usersInClassRepository;
+    private final ClassRepository classRepository;
 
     //связывание репозиториев и контроллера через конструктор и инициализация репозиториев
     @Autowired
     public TeamServiceImpl(UserRepository userRepository,
-                           GroupRepository groupRepository,
-                           UsersInGroupRepository usersInGroupRepository,
-                           UsersInClassRepository usersInClassRepository) {
+                            GroupRepository groupRepository,
+                            UsersInGroupRepository usersInGroupRepository,
+                            UsersInClassRepository usersInClassRepository,
+                           ClassRepository classRepository) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.usersInGroupRepository = usersInGroupRepository;
         this.usersInClassRepository = usersInClassRepository;
+        this.classRepository = classRepository;
     }
 
-    private static final Logger logger = LogManager.getLogger(TeamService.class);
+    private static final Logger logger = LogManager.getLogger(ITeamService.class);
 
     @Override
     public Boolean createGroup(String color) {
         try {
         groupRepository.save(new GroupEntity(color));
-        logger.info(color.getClass().getSimpleName() + Constants.ADDED);
+        logger.info(color.getClass().getSimpleName() + " Group added. The color is " + color);
         return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -63,7 +60,7 @@ public class TeamServiceImpl implements TeamService {
             groupRepository.deleteById(idGroup);
             return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -74,7 +71,7 @@ public class TeamServiceImpl implements TeamService {
             groupRepository.getById(idGroup).setColor(color);
             return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -85,7 +82,7 @@ public class TeamServiceImpl implements TeamService {
             usersInGroupRepository.save(new UsersInGroupEntity(idGroup, idUser, role));
             return true;
         }catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -96,7 +93,7 @@ public class TeamServiceImpl implements TeamService {
             usersInGroupRepository.save(new UsersInGroupEntity(idGroup, idUser, role));
             return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -107,7 +104,7 @@ public class TeamServiceImpl implements TeamService {
             usersInGroupRepository.deleteById(idUser);
             return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -118,7 +115,7 @@ public class TeamServiceImpl implements TeamService {
             userRepository.save(entity);
             return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }
@@ -128,7 +125,7 @@ public class TeamServiceImpl implements TeamService {
         try {
             return userRepository.getById(id);
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
@@ -138,24 +135,23 @@ public class TeamServiceImpl implements TeamService {
         try {
             return usersInGroupRepository.getById(idUser);
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public UsersInGroupEntity getTeamLeaderGroup(Integer idGroup) {
-        List<UsersInGroupEntity> list = new ArrayList<>();
-        UsersInGroupEntity teamLeader = new UsersInGroupEntity();
+    public UserEntity getTeamLeaderGroup(Integer idGroup) {
+        UserEntity teamLeader = new UserEntity();
         try {
-            for (UsersInGroupEntity user : list) {
-                if (Objects.equals(usersInGroupRepository.getById(idGroup).getRole(), "Team leader")) {
-                    teamLeader = usersInGroupRepository.getById(user.getId());
+            for (UsersInGroupEntity user : groupRepository.getById(idGroup).getIdGroupEntity()) {
+                if (user.getRole().equals("Team leader")) {
+                    teamLeader = userRepository.getById(user.getId());
                 }
             }
             return teamLeader;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
@@ -165,24 +161,23 @@ public class TeamServiceImpl implements TeamService {
         try{
             return usersInClassRepository.getById(idUser);
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public UsersInClassEntity getLectorGroup(Integer idClass) {
-        List<UsersInClassEntity> list = new ArrayList<>();
-        UsersInClassEntity teamLeader = new UsersInClassEntity();
+    public UserEntity getLectorGroup(Integer idClass) {
+        UserEntity lector = new UserEntity();
         try {
-            for (UsersInClassEntity user : list) {
-                if (Objects.equals(usersInClassRepository.getById(idClass).getRole(), "Lector")) {
-                    teamLeader = usersInClassRepository.getById(user.getId());
+            for (UsersInClassEntity user : classRepository.getById(idClass).getUsersInClassEntitiesFK()) {
+                if (user.getRole().equals("Lector")) {
+                    lector = userRepository.getById(user.getId());
                 }
             }
-            return teamLeader;
+            return lector;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
@@ -192,7 +187,23 @@ public class TeamServiceImpl implements TeamService {
         try {
             return groupRepository.getById(idGroup);
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<UserEntity> getListUsersInGroup(Integer idGroup) {
+        List<UserEntity> usersList = new ArrayList<>();
+        try {
+            for (UsersInGroupEntity user : groupRepository.getById(idGroup).getIdGroupEntity()) {
+                if (!user.getRole().equals("Student")) {
+                    usersList.add(userRepository.getById(user.getId()));
+                }
+            }
+            return usersList;
+        } catch (Exception e) {
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
@@ -206,7 +217,7 @@ public class TeamServiceImpl implements TeamService {
             }
             return list;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return null;
         }
     }
@@ -238,7 +249,7 @@ public class TeamServiceImpl implements TeamService {
             groupRepository.save(entity);
             return true;
         } catch (Exception e) {
-            logger.info(e.getClass() + e.getMessage());
+            logger.error(e.getClass() + e.getMessage());
             return false;
         }
     }

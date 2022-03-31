@@ -1,9 +1,5 @@
 package com.terehov.service_team;
 
-import com.terehov.service_team.model.UserEntity;
-import com.terehov.service_team.repository.UserRepository;
-import com.terehov.service_team.service.TeamServiceImpl;
-
 
 //public class SoapTeam {
 //        public static void main(String[] args) {

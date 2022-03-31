@@ -53,15 +53,14 @@ public class ControllerLayer {
         return teamService.getGroupById(id);
     }
 
+    @GetMapping("/group/users/{id_group}")
+    public List<UserEntity> getAllUsersInGroup(@PathVariable("id_group") Integer idGroup) {
+        return teamService.getListUsersInGroup(idGroup);
+    }
     @PostMapping("/groups/{id}/change_color")
     public Boolean changeGroupColor(@PathVariable("id") Integer idGroup, String color) {
         return teamService.changeGroupColor(idGroup, color);
     }
-//    либо этот вариант
-//    @GetMapping("/groups/change-color/{id}")
-//    public void changeColorForGroup(@PathVariable("id") Integer idGroup, String color) {
-//        teamService.getGroupById(idGroup).setColor(color);
-//    }
 
     @PostMapping("/groups/add_user/{id_group}")
     public Boolean addUserToGroup(@PathVariable("id_group") Integer idGroup, Integer idUser, String role) {
@@ -85,12 +84,12 @@ public class ControllerLayer {
     }
 
     @GetMapping("/groups/team_leader")
-    public UsersInGroupEntity getTeamLeaderOfGroup(Integer idGroup) {
+    public UserEntity getTeamLeaderOfGroup(Integer idGroup) {
         return teamService.getTeamLeaderGroup(idGroup);
     }
 
     @GetMapping("/group/group_lector/{id_class}")
-    public UsersInClassEntity getLectorOfGroup(@PathVariable("id_class") Integer idClass) {
+    public UserEntity getLectorOfGroup(@PathVariable("id_class") Integer idClass) {
         return teamService.getLectorGroup(idClass);
     }
 
