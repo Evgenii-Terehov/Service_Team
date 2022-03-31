@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -183,6 +185,23 @@ public class TeamServiceImpl implements ITeamService {
     }
 
     @Override
+    public List<GroupEntity> getGroupsByLector(Integer idLector) {
+        GroupEntity groupEntity = new GroupEntity();
+        List<GroupEntity> groupList = new ArrayList<>();
+        try {
+            for (UsersInGroupEntity user : groupEntity.getIdGroupEntity()) {
+                if (user.getId() == idLector) {
+                    groupList.add(user.getIdGroupEntity());
+                }
+            }
+            return groupList;
+        } catch (Exception e) {
+            logger.error(e.getClass() + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public GroupEntity getGroupById(Integer idGroup) {
         try {
             return groupRepository.getById(idGroup);
@@ -197,7 +216,7 @@ public class TeamServiceImpl implements ITeamService {
         List<UserEntity> usersList = new ArrayList<>();
         try {
             for (UsersInGroupEntity user : groupRepository.getById(idGroup).getIdGroupEntity()) {
-                if (!user.getRole().equals("Student")) {
+                if (user.getRole().equals("Student")) {
                     usersList.add(userRepository.getById(user.getId()));
                 }
             }

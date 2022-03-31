@@ -53,6 +53,11 @@ public class ControllerLayer {
         return teamService.getGroupById(id);
     }
 
+    @GetMapping("/groups/by_lector/{id_lector}")
+    public List<GroupEntity> getGroupsByLector(@PathVariable("id_lector") Integer idLector) {
+        return teamService.getGroupsByLector(idLector);
+    }
+
     @GetMapping("/group/users/{id_group}")
     public List<UserEntity> getAllUsersInGroup(@PathVariable("id_group") Integer idGroup) {
         return teamService.getListUsersInGroup(idGroup);

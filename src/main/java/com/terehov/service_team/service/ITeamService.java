@@ -21,6 +21,8 @@ public interface ITeamService {
 
     List<UserEntity> getListUsersInGroup(Integer idGroup);
 
+    List<GroupEntity> getGroupsByLector(Integer idLector);
+
     UserEntity getUserById(Integer id);
 
     UsersInGroupEntity getUserFromGroup(Integer idUser);
