@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,13 +19,15 @@ public class UsersInClassEntity {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_class")
-    private ClassEntity idClassEntity;
+//    @ManyToOne
+//    @JoinColumn(name = "id_class")
+    @Column(name = "id_class")
+    private Integer idClassEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private UserEntity idUserEntity;
+//    @ManyToOne
+//    @JoinColumn(name = "id_user")
+    @Column(name = "id_user")
+    private Integer idUserEntity;
 
     @Basic
     @Column(name = "role")
@@ -38,21 +41,21 @@ public class UsersInClassEntity {
         this.id = id;
     }
 
-    public ClassEntity getIdClassEntity() {
-        return idClassEntity;
-    }
-
-    public void setIdClassEntity(ClassEntity idClassEntity) {
-        this.idClassEntity = idClassEntity;
-    }
-
-    public UserEntity getIdUserEntity() {
-        return idUserEntity;
-    }
-
-    public void setIdUserEntity(UserEntity idUserEntity) {
-        this.idUserEntity = idUserEntity;
-    }
+//    public ClassEntity getIdClassEntity() {
+//        return idClassEntity;
+//    }
+//
+//    public void setIdClassEntity(ClassEntity idClassEntity) {
+//        this.idClassEntity = idClassEntity;
+//    }
+//
+//    public UserEntity getIdUserEntity() {
+//        return idUserEntity;
+//    }
+//
+//    public void setIdUserEntity(UserEntity idUserEntity) {
+//        this.idUserEntity = idUserEntity;
+//    }
 
     public String getRole() {
         return role;

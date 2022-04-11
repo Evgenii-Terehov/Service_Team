@@ -9,16 +9,11 @@ import com.terehov.service_team.service.TeamServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class ControllerLayer {
 
     private final TeamServiceImpl teamService;
@@ -48,7 +43,7 @@ public class ControllerLayer {
         return teamService.deleteGroup(idGroup);
     }
 
-    @GetMapping("/group/{group_id}")
+    @PostMapping("/group/{group_id}") ///ERROR
     public GroupEntity getGroupById(@PathVariable("group_id") Integer id) {
         return teamService.getGroupById(id);
     }
@@ -62,7 +57,7 @@ public class ControllerLayer {
     public List<UserEntity> getAllUsersInGroup(@PathVariable("id_group") Integer idGroup) {
         return teamService.getListUsersInGroup(idGroup);
     }
-    @PostMapping("/groups/{id}/change_color")
+    @PostMapping("/groups/{id}")
     public Boolean changeGroupColor(@PathVariable("id") Integer idGroup, String color) {
         return teamService.changeGroupColor(idGroup, color);
     }
@@ -83,24 +78,24 @@ public class ControllerLayer {
         return teamService.removeUserFromGroup(idUser);
     }
 
-    @GetMapping("/groups/get_user/{id}")
+    @GetMapping("/groups/get_user/{id}") ///ERROR
     public UsersInGroupEntity getUserFromGroup(@PathVariable("id") Integer idUser) {
         return teamService.getUserFromGroup(idUser);
     }
 
-    @GetMapping("/groups/team_leader")
-    public UserEntity getTeamLeaderOfGroup(Integer idGroup) {
+    @GetMapping("/groups/team_leader/{group_id}")///NOT NORMAL
+    public UserEntity getTeamLeaderOfGroup(@PathVariable("group_id") Integer idGroup) {
         return teamService.getTeamLeaderGroup(idGroup);
     }
 
-    @GetMapping("/group/group_lector/{id_class}")
+    @GetMapping("/group/group_lector/{id_class}")///NOT NORMAL
     public UserEntity getLectorOfGroup(@PathVariable("id_class") Integer idClass) {
         return teamService.getLectorGroup(idClass);
     }
 
     @GetMapping("/users/{id}")
-    public UserEntity getUserById(@PathVariable("id") Integer id) {
-        return teamService.getUserById(id);
+    public UserEntity getUserById(@PathVariable("id") Integer idUser) {
+        return teamService.getUserById( idUser);
     }
 
     @PostMapping("/users/insert_user")
@@ -108,12 +103,12 @@ public class ControllerLayer {
         return teamService.insertUser(entity);
     }
 
-    @GetMapping("/class/user_in_class/{id_user}")
+    @GetMapping("/class/user_in_class/{id_user}")///ERROR
     public UsersInClassEntity getUserClass(@PathVariable("id_user") Integer idUser) {
         return teamService.getUserClass(idUser);
     }
 
-    @GetMapping("/users/list_users_by_id")
+    @GetMapping("/users/list_users_by_id")///ERROR
     public List<UserEntity> getListOfUsersByIdList(List<Integer> listOfId) {
         return teamService.getListUsersByListOfId(listOfId);
     }

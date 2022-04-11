@@ -1,9 +1,6 @@
 package com.terehov.service_team.service;
 
-import com.terehov.service_team.model.GroupEntity;
-import com.terehov.service_team.model.UserEntity;
-import com.terehov.service_team.model.UsersInClassEntity;
-import com.terehov.service_team.model.UsersInGroupEntity;
+import com.terehov.service_team.model.*;
 
 import com.terehov.service_team.repository.*;
 
@@ -125,7 +122,7 @@ public class TeamServiceImpl implements ITeamService {
     @Override
     public UserEntity getUserById(Integer id) {
         try {
-            return userRepository.getById(id);
+            return userRepository.getUserEntitiesById(id);
         } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
             return null;
@@ -161,7 +158,14 @@ public class TeamServiceImpl implements ITeamService {
     @Override
     public UsersInClassEntity getUserClass(Integer idUser) {
         try{
-            return usersInClassRepository.getById(idUser);
+            UsersInClassEntity usersInClassEntity = new UsersInClassEntity();
+//            usersInClassEntity.
+//            usersInClassRepository.getById(userRepository
+//                    .getById(idUser).getId()).getIdClassEntity();
+//            return classRepository.getById(userRepository
+//                    .getById(idUser)
+//                    );
+            return null;
         } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
             return null;
@@ -191,7 +195,7 @@ public class TeamServiceImpl implements ITeamService {
         try {
             for (UsersInGroupEntity user : groupEntity.getIdGroupEntity()) {
                 if (user.getId() == idLector) {
-                    groupList.add(user.getIdGroupEntity());
+                    groupList.add(groupRepository.getById(user.getIdGroupEntity()));
                 }
             }
             return groupList;
@@ -204,7 +208,7 @@ public class TeamServiceImpl implements ITeamService {
     @Override
     public GroupEntity getGroupById(Integer idGroup) {
         try {
-            return groupRepository.getById(idGroup);
+            return groupRepository.getGroupEntitiesById(idGroup);
         } catch (Exception e) {
             logger.error(e.getClass() + e.getMessage());
             return null;

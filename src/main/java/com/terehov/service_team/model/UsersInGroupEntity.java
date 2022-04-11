@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,57 +19,19 @@ public class UsersInGroupEntity {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_group")
-    private GroupEntity idGroupEntity;
+    @Column(name = "id_group")
+    private Integer idGroupEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private UserEntity idUserEntity;
+    @Column(name = "id_user")
+    private Integer idUserEntity;
 
     @Basic
     @Column(name = "role")
     private String role;
 
     public UsersInGroupEntity(Integer idGroupEntity, Integer idUserEntity, String role) {
-        this.idGroupEntity = new GroupEntity(idGroupEntity);
-        this.idUserEntity = new UserEntity(idUserEntity);
-        this.role = role;
-    }
-
-    public UsersInGroupEntity(Integer idUserEntity) {
-        this.idUserEntity = new UserEntity(idUserEntity);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public GroupEntity getIdGroupEntity() {
-        return idGroupEntity;
-    }
-
-    public void setIdGroupEntity(GroupEntity idGroupEntity) {
         this.idGroupEntity = idGroupEntity;
-    }
-
-    public UserEntity getIdUserEntity() {
-        return idUserEntity;
-    }
-
-    public void setIdUserEntity(UserEntity idUserEntity) {
         this.idUserEntity = idUserEntity;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
         this.role = role;
     }
 
